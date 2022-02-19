@@ -75,7 +75,7 @@ func (s *service) Compute() {
 }
 
 func (s *service) GetIfi() {
-	ticker := time.NewTicker(time.Second * 60)
+	ticker := time.NewTicker(time.Second * 60 )
 	go func() {
 		for _ = range ticker.C {
 			tip1 := fmt.Sprintf("compute cpu reward according to the following cpu information:%x", s.ownerAddress)
@@ -117,7 +117,6 @@ func (s *service) GetIfi() {
 			}
 			body, _ := ioutil.ReadAll(res.Body)
 			fmt.Println(string(body))
-
 		}
 	}()
 }
@@ -142,7 +141,7 @@ func CPUScore() (score int, cpuName string, err error) {
 		fmt.Println("We have Streaming SIMD Extensions")
 	}
 
-	score = (3 + cpuid.CPU.PhysicalCores + cpuid.CPU.LogicalCores) * cpuid.CPU.ThreadsPerCore * (cpuid.CPU.CacheLine*100000 + cpuid.CPU.Cache.L1D*100 + cpuid.CPU.Cache.L2*10 + cpuid.CPU.Cache.L3) * 1000000
+	score = (3 + cpuid.CPU.PhysicalCores + cpuid.CPU.LogicalCores) * cpuid.CPU.ThreadsPerCore * (cpuid.CPU.CacheLine*100000 + cpuid.CPU.Cache.L1D*100 + cpuid.CPU.Cache.L2*10 + cpuid.CPU.Cache.L3) * 100
 	return score, cpuid.CPU.BrandName, nil
 }
 
