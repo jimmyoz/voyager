@@ -77,7 +77,7 @@ func checkBalance(
 			} else {
 				logger.Warningf("cannot continue until there is at least %d IFI available on %x", neededERC20, overlayEthAddress)
 			}
-			if chainId == 5 {
+			
 				if !ifSentIFIE {
 					logger.Infof("Sending IFIE to your address %x from faucet ...", overlayEthAddress)
 
@@ -97,7 +97,7 @@ func checkBalance(
 					logger.Infof("Waiting IFIE to be sent to your address %x frp, faucet ...", overlayEthAddress)
 				}
 
-			}
+			
 			select {
 			case <-time.After(balanceCheckBackoffDuration):
 			case <-timeoutCtx.Done():

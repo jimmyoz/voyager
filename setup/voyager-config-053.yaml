@@ -1,5 +1,5 @@
 api-addr: :1633
-bootnode: "/ip4/3.15.214.124/tcp/1634/p2p/16Uiu2HAmT2rcJJfaAyjFyLQecosEmCyAmSUWoEZBceig3rQmTP4v"
+#bootnode: "/ip4/18.216.66.9/tcp/1634/p2p/16Uiu2HAmT2rcJJfaAyjFyLQecosEmCyAmSUWoEZBceig3rQmTP4v"
 bootnode-mode: false
 clef-signer-enable: false
 clef-signer-endpoint: ""
@@ -30,8 +30,8 @@ payment-tolerance: "50000000000000"
 resolver-options: []
 standalone: false
 swap-enable: true
-swap-endpoint: http://18.163.112.243:8545
-swap-factory-address: "0x1AC5Ccad2c67d6eade03AeC752f074324fa306bc"
+swap-endpoint: http://18.216.66.9:8545
+swap-factory-address: "0x18aBF8b99c3AF1448400bFbd45F24701FD39da31"
 swap-initial-deposit: "0"
 tracing-enable: false
 tracing-endpoint: 127.0.0.1:6831
