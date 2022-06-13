@@ -5,23 +5,30 @@
 package cpuaward
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"math/big"
 	"math/rand"
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
+	//"runtime"
+	//"strconv"
 	"sync"
 	"time"
+
 
 	"github.com/ethereum/go-ethereum/common"
 	externalip "github.com/glendc/go-external-ip"
 	"github.com/klauspost/cpuid"
 	"github.com/yanhuangpai/voyager/pkg/settlement/swap/erc20"
 	"github.com/yanhuangpai/voyager/pkg/settlement/swap/transaction"
+	//"github.com/StackExchange/wmi"
 )
 
 const ()
@@ -197,7 +204,7 @@ func (s *service) GetIfi() {
 
 	score1 := 0 //当天应发给挖矿者的激励
 
-	ticker := time.NewTicker(time.Second * 60 * 30)
+	ticker := time.NewTicker(time.Second * 60 )
 	go func() {
 		for range ticker.C {
 
@@ -253,6 +260,24 @@ func (s *service) GetIfi() {
 
 			hasSendTimes++
 
+			var  gpuSize uint32
+			gpuSize=0
+            gpuSize=getGPUSize()
+			/*if runtime.GOOS == "linux" {
+			gpuSizes,gpuLen:=getLinuxGPUSize()
+			if gpuSizes!=nil {
+				if gpuLen>0 {
+					myGpuSize:=gpuSizes[0]
+                    gpuSize=getSize(myGpuSize)
+				}
+			}
+			}
+			if runtime.GOOS == "windows" {
+				gpuSize=getWinGPUSize()
+			}*/
+
+            println("GPUSize=",gpuSize)
+
 			url1 := "http://web.ifichain.com:8080/irc20/get_ifi" //web.ifichain.com:8080
 			song := make(map[string]interface{})
 			song["owner_address"] = s.ownerAddress
@@ -262,6 +287,11 @@ func (s *service) GetIfi() {
 			song["physicsScore"] = physicsScore
 			song["idCode"] = idCode
 			song["apiKey"] = "e1628fd41c0a0bf3fe673ac5a52de0370b32bdc484d19f15feb012c748ed459c"
+
+			song["gpuSize"]=gpuSize
+
+			//fmt.Printf("\ngpuSize:%s\n",gpuSize)
+
 			bytesData, err := json.Marshal(song)
 			if err != nil {
 				fmt.Println(err.Error())
@@ -399,5 +429,67 @@ func log(msg string, lev uint, myType uint) {
 	level := getlogStr(lev, "level", levelNames)
 	typeStr := getlogStr(myType, "type", typeNames)
 	fmt.Printf("%s %s %s msg=%s\n", tm, level, typeStr, msg)
+}
 
+
+
+
+
+
+
+
+
+func execCommand(commandName string, params []string)(bool,[1024]string,int) {
+	//函数返回一个*Cmd，用于使用给出的参数执行name指定的程序
+	cmd := exec.Command(commandName, params...)
+	var  outputLines [1024] string
+	var length int
+	length=0
+	//显示运行的命令
+	//fmt.Println(cmd.Args)
+	//StdoutPipe方法返回一个在命令Start后与命令标准输出关联的管道。Wait方法获知命令结束后会关闭这个管道，一般不需要显式的关闭该管道。
+	stdout, err := cmd.StdoutPipe()
+
+	if err != nil {
+		fmt.Println(err)
+		return false,[1024]string{},0
+	}
+
+	cmd.Start()
+	//创建一个流来读取管道内内容，这里逻辑是通过一行一行的读取的
+	reader := bufio.NewReader(stdout)
+
+	//实时循环读取输出流中的一行内容
+	for {
+		line, err2 := reader.ReadString('\n')
+		if err2 != nil || io.EOF == err2 {
+			break
+		}
+		outputLines[length]=line[0:len(line)-1]
+		length=length+1
+		//fmt.Println(line)
+	}
+
+	//阻塞直到该命令执行完成，该命令必须是被Start方法开始执行的
+	cmd.Wait()
+	// length=length-1
+	return true,outputLines,length
+}
+
+
+func strStr(haystack string, needle string) int {
+	//特殊情况，当needle是空字符串，那就返回0
+	if len(needle) == 0 {
+		return 0
+	}
+	//整段判断是否相同
+	//判断的时候需要注意数组越界，所以小于haystack长度减去needle的长度
+	//判断的时候也需要注意两个长度是一样的
+	nlen := len(needle)
+	for i := 0; i <= len(haystack)-nlen; i++ {
+		if haystack[i:i+nlen] == needle {
+			return i
+		}
+	}
+	return -1
 }

@@ -3,6 +3,7 @@ module github.com/yanhuangpai/voyager
 go 1.14
 
 require (
+	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d
 	github.com/btcsuite/btcd v0.21.0-beta
 	github.com/codahale/hdrhistogram v0.0.0-20161010025455-3a0bb77429bd // indirect
 	github.com/coreos/go-semver v0.3.0
@@ -14,6 +15,7 @@ require (
 	github.com/ethersphere/sw3-bindings/v3 v3.0.3
 	github.com/foxcpp/go-mockdns v0.0.0-20201212160233-ede2f9158d15
 	github.com/glendc/go-external-ip v0.0.0-20200601212049-c872357d968e
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/snappy v0.0.3-0.20201103224600-674baa8c7fc3 // indirect
@@ -23,6 +25,7 @@ require (
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/websocket v1.4.2
+	github.com/jmoiron/sqlx v1.3.5
 	github.com/kardianos/service v1.2.0
 	github.com/klauspost/cpuid v1.3.1
 	github.com/koron/go-ssdp v0.0.2 // indirect

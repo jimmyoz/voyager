@@ -99,6 +99,7 @@ Welcome to the Infinity....
 <*)))))>< `
 
 			fmt.Println(voyagerASCII)
+
 			logger.Infof("version: %v", voyager.Version)
 
 			debugAPIAddr := c.config.GetString(optionNameDebugAPIAddr)
