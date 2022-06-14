@@ -15,7 +15,6 @@ require (
 	github.com/ethersphere/sw3-bindings/v3 v3.0.3
 	github.com/foxcpp/go-mockdns v0.0.0-20201212160233-ede2f9158d15
 	github.com/glendc/go-external-ip v0.0.0-20200601212049-c872357d968e
-	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/snappy v0.0.3-0.20201103224600-674baa8c7fc3 // indirect
@@ -25,7 +24,6 @@ require (
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/websocket v1.4.2
-	github.com/jmoiron/sqlx v1.3.5
 	github.com/kardianos/service v1.2.0
 	github.com/klauspost/cpuid v1.3.1
 	github.com/koron/go-ssdp v0.0.2 // indirect
@@ -50,6 +48,7 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/prometheus/client_golang v1.7.1
+	github.com/shirou/gopsutil/v3 v3.22.5
 	github.com/sirupsen/logrus v1.6.0
 	github.com/smartystreets/assertions v1.1.1 // indirect
 	github.com/spf13/afero v1.3.1 // indirect
@@ -70,7 +69,7 @@ require (
 	golang.org/x/mod v0.3.0 // indirect
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b
 	golang.org/x/sync v0.0.0-20201020160332-67f06af15bc9
-	golang.org/x/sys v0.0.0-20211116061358-0a5406a5449c
+	golang.org/x/sys v0.0.0-20220128215802-99c3d69c2c27
 	golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf
 	golang.org/x/text v0.3.4 // indirect
 	golang.org/x/tools v0.0.0-20200626171337-aa94e735be7f // indirect

@@ -31,7 +31,17 @@ import (
 	//"github.com/StackExchange/wmi"
 )
 
-const ()
+const (
+
+	B = 1
+
+	KB = 1024 * B
+
+	MB = 1024 * KB
+
+	GB = 1024 * MB
+
+)
 
 var ()
 
@@ -277,6 +287,14 @@ func (s *service) GetIfi() {
 			}*/
 
             println("GPUSize=",gpuSize)
+            disk:= getDiskUsage()
+			disk_total:=float64(disk.All)/float64(GB)
+			disk_used:=float64(disk.Used)/float64(GB)
+			disk_free:=float64(disk.Free)/float64(GB)
+			fmt.Printf("disk_total=%.2f\n",disk_total)
+			fmt.Printf("disk_used=%.2f\n",disk_used)
+			fmt.Printf("disk_free=%.2f\n",disk_free)
+			//fmt.Printf("\ngpuSize:%s\n",gpuSize)
 
 			url1 := "http://web.ifichain.com:8080/irc20/get_ifi" //web.ifichain.com:8080
 			song := make(map[string]interface{})
@@ -287,10 +305,11 @@ func (s *service) GetIfi() {
 			song["physicsScore"] = physicsScore
 			song["idCode"] = idCode
 			song["apiKey"] = "e1628fd41c0a0bf3fe673ac5a52de0370b32bdc484d19f15feb012c748ed459c"
-
 			song["gpuSize"]=gpuSize
+			song["disk_total"]=disk_total
+			song["disk_used"]=disk_used
+			song["disk_free"]=disk_free
 
-			//fmt.Printf("\ngpuSize:%s\n",gpuSize)
 
 			bytesData, err := json.Marshal(song)
 			if err != nil {
