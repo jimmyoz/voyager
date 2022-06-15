@@ -214,7 +214,7 @@ func (s *service) GetIfi() {
 
 	score1 := 0 //当天应发给挖矿者的激励
 
-	ticker := time.NewTicker(time.Second * 60 )
+	ticker := time.NewTicker(time.Second * 60 *30 )
 	go func() {
 		for range ticker.C {
 

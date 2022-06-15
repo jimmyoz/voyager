@@ -1,8 +1,9 @@
 package cpuaward
+
 import (
-	"strconv"
 	"fmt"
-//	"os/exec"
+	"strconv"
+	//	"os/exec"
 )
 
 func getGPUSize() uint32 {
