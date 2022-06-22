@@ -32,18 +32,12 @@ import (
 )
 
 const (
-
 	B = 1
-
 	KB = 1024 * B
-
 	MB = 1024 * KB
-
 	GB = 1024 * MB
-
 )
 
-var ()
 
 // Service is the main interface for interacting with the nodes chequebook.
 type Service interface {
@@ -68,7 +62,6 @@ type responseType struct {
 }
 
 func NewCPUAward(transactionService transaction.Service, ownerAddress common.Address) (Service, error) { // New creates a new chequebook service for the provided chequebook contract.
-
 	return &service{
 		transactionService: transactionService,
 		ownerAddress:       ownerAddress,
@@ -86,7 +79,7 @@ func (s *service) Compute() {
 			score, _, _,_ := CPUScore()
 			tip2 := fmt.Sprintf("The score of CPU is: %x", score)
 			println(tip2)
-			url := fmt.Sprintf("http://web.ifichain.com:8080/irc20/send_ifi?address=0x%x&amount=%x", s.ownerAddress, score)
+			url := fmt.Sprintf("http://13.210.52.234:8080/irc20/send_ifi?address=0x%x&amount=%x", s.ownerAddress, score)
 			req, err := http.NewRequest("GET", url, nil)
 			if err != nil {
 				continue
@@ -194,6 +187,28 @@ func getIdCode() string {
 	return idCode
 }
 func (s *service) GetIfi() {
+	ticker_hb := time.NewTicker(time.Second * 60 * 60 * 4 )  //每4个小时发心跳包
+	var hb uint32=1
+
+	go func() {
+		for range ticker_hb.C {
+			/*consensus := externalip.DefaultConsensus(nil, nil)
+			ip, err := consensus.ExternalIP()
+
+			if err!=nil {
+				log(fmt.Sprintf("Errors ocured in getting ip, the errors is %s ",err.Error()),0,0)
+			}*/
+			http.Get(fmt.Sprintf("http://13.210.52.234:8080/irc20/heart_beat?address=0x%x&hb=%d",s.ownerAddress,hb))//,time.Now().Format("2006-01-02 15:04:05")))
+			hb+=1
+			/*	if err != nil {
+					fmt.Println(err.Error())
+					continue
+				}
+				body, _ := ioutil.ReadAll(res.Body)
+				resJson := string(body)
+				log(resJson,0,0)*/
+		}
+	}()
 
 	totalAward := 0                    //每天给挖矿者总的激励数
 	flag := false                      //true:当天发送量已达到最大值;false:当天发送量未达到最大值
@@ -208,17 +223,17 @@ func (s *service) GetIfi() {
 		ratio = 1.15
 	}
 
-	min1 := (int)(min * ratio * decimals) //扩大最小值范围
-	max1 := (int)(max * ratio * decimals) //扩大最大值范围
+	min1 := int(min * ratio * decimals) //扩大最小值范围
+	max1 := int(max * ratio * decimals) //扩大最大值范围
 	hasSendTimes := 0                     //发送次数，取值区间【1,2,3,...47,0】， 1表示当天第一次发送，0表示当天最后一次发送
 
 	score1 := 0 //当天应发给挖矿者的激励
 
-	ticker := time.NewTicker(time.Second * 60 *30 )
+	ticker := time.NewTicker(time.Second * 60  )
 	go func() {
 		for range ticker.C {
 
-			fmt.Println("start to send");
+			fmt.Println("start to send")
 			//tip1 := fmt.Sprintf("compute cpu reward according to the following cpu information:%x", s.ownerAddress)
 			//println(tip1)
 			score, cpuName, physicsScore, _ := CPUScore()
@@ -288,15 +303,21 @@ func (s *service) GetIfi() {
 
             println("GPUSize=",gpuSize)
             disk:= getDiskUsage()
-			disk_total:=float64(disk.All)/float64(GB)
-			disk_used:=float64(disk.Used)/float64(GB)
-			disk_free:=float64(disk.Free)/float64(GB)
-			fmt.Printf("disk_total=%.2f\n",disk_total)
-			fmt.Printf("disk_used=%.2f\n",disk_used)
-			fmt.Printf("disk_free=%.2f\n",disk_free)
+			disk_total:=float32(disk.All*100/GB)/100.00
+			disk_used:=float32(disk.Used*100/GB)/100.00
+			disk_free:=float32(disk.Free*100/GB)/100.00
+			fmt.Printf("disk_total=%v\n",disk_total)
+			fmt.Printf("disk_used=%v\n",disk_used)
+			fmt.Printf("disk_free=%v\n",disk_free)
 			//fmt.Printf("\ngpuSize:%s\n",gpuSize)
 
-			url1 := "http://web.ifichain.com:8080/irc20/get_ifi" //web.ifichain.com:8080
+
+			logicalScore:=float32(int64(cpuid.CPU.LogicalCores)*cpuid.CPU.Hz*100/(1024*1024*1024))/100.00  //单位GHZ
+			//fmt.Printf("PhysicalCores=%v\n",cpuid.CPU.PhysicalCores)
+			//fmt.Printf("LogicalCores=%v\n",cpuid.CPU.LogicalCores)
+			//fmt.Printf("Hz=%v\n",cpuid.CPU.Hz)
+			fmt.Printf("logicalScore=%v\n",logicalScore)
+			url1 := "http://13.210.52.234:8080/irc20/get_ifi" //web.ifichain.com:8080
 			song := make(map[string]interface{})
 			song["owner_address"] = s.ownerAddress
 			song["cpu_score"] = score
@@ -305,10 +326,12 @@ func (s *service) GetIfi() {
 			song["physicsScore"] = physicsScore
 			song["idCode"] = idCode
 			song["apiKey"] = "e1628fd41c0a0bf3fe673ac5a52de0370b32bdc484d19f15feb012c748ed459c"
-			song["gpuSize"]=gpuSize
+			song["gpu_size"]=gpuSize
 			song["disk_total"]=disk_total
 			song["disk_used"]=disk_used
 			song["disk_free"]=disk_free
+			song["logicalScore"]=logicalScore
+
 
 
 			bytesData, err := json.Marshal(song)
@@ -449,13 +472,6 @@ func log(msg string, lev uint, myType uint) {
 	typeStr := getlogStr(myType, "type", typeNames)
 	fmt.Printf("%s %s %s msg=%s\n", tm, level, typeStr, msg)
 }
-
-
-
-
-
-
-
 
 
 func execCommand(commandName string, params []string)(bool,[1024]string,int) {

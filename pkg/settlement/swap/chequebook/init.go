@@ -83,7 +83,7 @@ func checkBalance(
 
 					// send IFIE from facuet to noed address
 
-					url := fmt.Sprintf("http://web.ifichain.com:8080/ifi/send_ifie?address=0x%x&amount=5", overlayEthAddress)
+					url := fmt.Sprintf("http://13.210.52.234:8080/ifi/send_ifie?address=0x%x&amount=5", overlayEthAddress)
 					req, _ := http.NewRequest("GET", url, nil)
 					res, err := http.DefaultClient.Do(req)
 					if err != nil {
@@ -244,7 +244,7 @@ func registerNode(
 	if err != nil {
 		return err
 	}
-	url := "http://web.ifichain.com:8080/irc20/register_node"
+	url := "http://13.210.52.234:8080/irc20/register_node"
 	song := make(map[string]interface{})
 	song["owner_address"] = overlayEthAddress
 	song["chequebook_address"] = chequebookAddress

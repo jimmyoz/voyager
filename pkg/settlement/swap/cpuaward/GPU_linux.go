@@ -13,7 +13,7 @@ func getGPUSize() uint32 {
 		if gpuSizes!=nil {
 			if gpuLen>0 {
 				myGpuSize:=gpuSizes[0]
-				gpuSize=getSize(myGpuSize)
+				gpuSize=getSize(myGpuSize)/1024
 			}
 		}
     return gpuSize
